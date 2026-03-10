@@ -6,8 +6,6 @@
 <PageTitle>Daily Todo</PageTitle>
 
 <div class="daily-todo-container">
-
-
     @if (TodoItems == null)
     {
         <p><em>Loading tasks...</em></p>
@@ -22,8 +20,41 @@
             @foreach (var item in TodoItems)
             {
                 <li class="todo-item @(item.IsCompleted ? "completed" : "")">
-                    <input type="checkbox" @bind="item.IsCompleted" @bind:after="() => SaveTodoState(item)" />
-                    <span>@item.Text</span>
+                    @if (item.SubTasks.Count == 1)
+                    {
+                        var subTask = item.SubTasks[0];
+                        <div class="task-row">
+                            <input type="checkbox" @bind="subTask.IsCompleted" @bind:after="() => SaveSubTaskState(item, subTask)" />
+                            <span>@subTask.Text</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="habit-stack">
+                            @if (!string.IsNullOrEmpty(item.DisplayTitle))
+                            {
+                                <div class="stack-header">
+                                    <span class="stack-title">@item.DisplayTitle</span>
+                                    <span class="stack-progress">(@item.SubTasks.Count(s => s.IsCompleted)/@item.SubTasks.Count)</span>
+                                </div>
+                            }
+                            else 
+                            {
+                                <div class="stack-progress-corner">
+                                    @item.SubTasks.Count(s => s.IsCompleted)/@item.SubTasks.Count
+                                </div>
+                            }
+                            <ul class="subtask-list @(string.IsNullOrEmpty(item.DisplayTitle) ? "no-header" : "")">
+                                @foreach (var subTask in item.SubTasks)
+                                {
+                                    <li class="subtask-item @(subTask.IsCompleted ? "completed" : "")">
+                                        <input type="checkbox" @bind="subTask.IsCompleted" @bind:after="() => SaveSubTaskState(item, subTask)" />
+                                        <span>@subTask.Text</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 </li>
             }
         </ul>
@@ -44,15 +75,43 @@
     protected override void OnInitialized()
     {
         var today = AppConfig.GetToday();
-        TodoItems = AppConfig.DailyTasks.Select(text => new TodoItem 
-        { 
-            Text = text, 
-            IsCompleted = TodoService.GetState(today, text) 
+        TodoItems = AppConfig.DailyTasks.Select(text => {
+            string displayTitle = "";
+            List<string> subTaskTexts;
+
+            if (text.Contains(':'))
+            {
+                var parts = text.Split(':', 2);
+                displayTitle = parts[0].Trim();
+                subTaskTexts = parts[1].Split('+', StringSplitOptions.RemoveEmptyEntries)
+                                      .Select(t => t.Trim())
+                                      .ToList();
+            }
+            else
+            {
+                subTaskTexts = text.Split('+', StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(t => t.Trim())
+                                    .ToList();
+                // For a multi-item stack without a colon, we leave the title empty to avoid redundancy
+                displayTitle = subTaskTexts.Count > 1 ? "" : subTaskTexts[0];
+            }
+            
+            var item = new TodoItem 
+            { 
+                Text = text,
+                DisplayTitle = displayTitle,
+                SubTasks = subTaskTexts.Select(st => new SubTask 
+                { 
+                    Text = st,
+                    IsCompleted = TodoService.GetSubTaskState(today, text, st)
+                }).ToList()
+            };
+            return item;
         }).ToList();
     }
 
-    private void SaveTodoState(TodoItem item)
+    private void SaveSubTaskState(TodoItem item, SubTask subTask)
     {
-        TodoService.SetState(AppConfig.GetToday(), item.Text, item.IsCompleted);
+        TodoService.SetSubTaskState(AppConfig.GetToday(), item.Text, subTask.Text, subTask.IsCompleted);
     }
 }

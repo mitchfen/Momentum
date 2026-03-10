@@ -34,16 +34,112 @@ h1 {
 
 .todo-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     background: #f7fafc;
     border: 1px solid #edf2f7;
     border-radius: 12px;
     margin-bottom: 12px;
-    padding: 16px 20px;
+    padding: 0;
     font-size: 1.1em;
     text-align: left;
     transition: all 0.2s ease;
-    cursor: pointer; /* Suggests interactivity */
+}
+
+.task-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+}
+
+.habit-stack {
+    width: 100%;
+}
+
+.stack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #edf2f7;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+}
+
+.stack-progress {
+    font-size: 0.9em;
+    color: #718096;
+}
+
+.stack-progress-corner {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 0.8em;
+    color: #a0aec0;
+    font-weight: 600;
+}
+
+.habit-stack {
+    width: 100%;
+    position: relative;
+}
+
+.subtask-list {
+    list-style: none;
+    padding: 10px 20px 16px 40px;
+    margin: 0;
+}
+
+.subtask-list.no-header {
+    padding-top: 20px;
+}
+
+.subtask-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 0.95em;
+}
+
+.subtask-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e0;
+    border-radius: 5px;
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+    transition: all 0.2s ease;
+}
+
+.subtask-item input[type="checkbox"]::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em white;
+    transform-origin: center;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.subtask-item input[type="checkbox"]:checked {
+    background-color: #48bb78;
+    border-color: #48bb78;
+}
+
+.subtask-item input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+.subtask-item.completed span {
+    text-decoration: line-through;
+    color: #a0aec0;
 }
 
 .todo-item:hover {

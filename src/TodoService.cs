@@ -7,8 +7,8 @@ namespace DailyTodo
     {
         private readonly AppConfig _appConfig;
         private readonly string _filePath = "data/todo-state.json";
-        // Key is date string (yyyy-MM-dd), Value is a map of TaskText -> IsCompleted
-        private ConcurrentDictionary<string, ConcurrentDictionary<string, bool>> _dailyState = new();
+        // Key is date string (yyyy-MM-dd), Value is a map of TaskText -> SubTask States (SubTaskText -> IsCompleted)
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, ConcurrentDictionary<string, bool>>> _dailyState = new();
         private readonly object _fileLock = new();
 
         public TodoService(AppConfig appConfig)
@@ -17,23 +17,27 @@ namespace DailyTodo
             LoadFromFile();
         }
 
-        public bool GetState(DateTime date, string taskText)
+        public bool GetSubTaskState(DateTime date, string taskText, string subTaskText)
         {
             CleanupOldDates();
             var dateKey = date.ToString("yyyy-MM-dd");
             if (_dailyState.TryGetValue(dateKey, out var tasks))
             {
-                return tasks.TryGetValue(taskText, out var isCompleted) && isCompleted;
+                if (tasks.TryGetValue(taskText, out var subTasks))
+                {
+                    return subTasks.TryGetValue(subTaskText, out var isCompleted) && isCompleted;
+                }
             }
             return false;
         }
 
-        public void SetState(DateTime date, string taskText, bool isCompleted)
+        public void SetSubTaskState(DateTime date, string taskText, string subTaskText, bool isCompleted)
         {
             CleanupOldDates();
             var dateKey = date.ToString("yyyy-MM-dd");
-            var tasks = _dailyState.GetOrAdd(dateKey, _ => new ConcurrentDictionary<string, bool>());
-            tasks[taskText] = isCompleted;
+            var tasks = _dailyState.GetOrAdd(dateKey, _ => new ConcurrentDictionary<string, ConcurrentDictionary<string, bool>>());
+            var subTasks = tasks.GetOrAdd(taskText, _ => new ConcurrentDictionary<string, bool>());
+            subTasks[subTaskText] = isCompleted;
             SaveToFile();
         }
 
@@ -61,7 +65,7 @@ namespace DailyTodo
                     if (File.Exists(_filePath))
                     {
                         var json = File.ReadAllText(_filePath);
-                        var data = JsonSerializer.Deserialize<ConcurrentDictionary<string, ConcurrentDictionary<string, bool>>>(json);
+                        var data = JsonSerializer.Deserialize<ConcurrentDictionary<string, ConcurrentDictionary<string, ConcurrentDictionary<string, bool>>>>(json);
                         if (data != null)
                         {
                             _dailyState = data;
