@@ -4,12 +4,12 @@ WORKDIR /source
 
 # Copy csproj and restore dependencies
 COPY src/*.csproj src/
-RUN dotnet restore src/DailyTodo.csproj
+RUN dotnet restore src/Momentum.csproj
 
 # Copy remaining source code and publish
 COPY . .
 WORKDIR /source/src
-RUN dotnet publish DailyTodo.csproj -c Release -o /app/publish
+RUN dotnet publish Momentum.csproj -c Release -o /app/publish
 
 # Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
@@ -22,6 +22,6 @@ COPY --from=build /app/publish .
 EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:80
 
-ENTRYPOINT ["dotnet", "DailyTodo.dll"]
+ENTRYPOINT ["dotnet", "Momentum.dll"]
 
-LABEL org.opencontainers.image.description="Daily todo application"
+LABEL org.opencontainers.image.description="Momentum - a daily habit stacking, task tracking application"

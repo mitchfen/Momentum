@@ -22,7 +22,7 @@ jobs:
     name: Build and publish
     runs-on: ubuntu-latest
     env:
-      imageName: ghcr.io/mitchfen/dailytodo:latest
+      imageName: ghcr.io/mitchfen/momentum:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6

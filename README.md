@@ -1,6 +1,6 @@
 ## About
 
-DailyTodo is a simple application designed for tracking tasks that need to be done each day.  
+Momentum is a simple application designed for tracking tasks and habit stacks that need to be done each day.  
 Task state is persisted in a backend JSON file and resets each night.  
 
 ### Example 
@@ -18,26 +18,26 @@ Task state is persisted in a backend JSON file and resets each night.
 ### 1. Run Locally (dotnet)
 You can run the application directly using the dotnet CLI:
 ```bash
-dotnet run --project src/DailyTodo.csproj
+dotnet run --project src/Momentum.csproj
 ```
 
 ### 2. Build Docker Image
 Build the multi-stage image (which handles restoration and publishing internally):
 ```bash
-docker build -t dailytodo:latest .
+docker build -t momentum:latest .
 ```
 
 ### 3. Run Locally (Docker)
 Run the container to test locally. Access at `http://localhost:5000`
 ```bash
-docker run -p 5000:80 --rm -it dailytodo:latest
+docker run -p 5000:80 --rm -it momentum:latest
 ```
 *Note: You can pass environment variables to test the config injection:*
 ```bash
 docker run -p 5000:80 \
   -e "DAILY_TASKS=Test Task 1,Test Task 2" \
   -e "TIMEZONE=America/Los_Angeles" \
-  --rm -it dailytodo:latest
+  --rm -it momentum:latest
 ```
 
 ### 4. Deploy to Kubernetes

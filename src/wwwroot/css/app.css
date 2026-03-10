@@ -7,7 +7,7 @@ html, body {
     min-height: 100vh;
 }
 
-.daily-todo-container {
+.momentum-container {
     background: #ffffff;
     border-radius: 16px; /* Softer corners */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Deeper, softer shadow */
@@ -226,7 +226,7 @@ h1 {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .daily-todo-container {
+    .momentum-container {
         padding: 25px;
     }
 

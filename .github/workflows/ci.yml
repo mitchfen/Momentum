@@ -16,11 +16,11 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Build Docker image
-      run: docker build -t dailytodo:test .
+      run: docker build -t momentum:test .
 
     - name: Run container
       run: |
-        docker run -d --name dailytodo -p 8080:80 -e "DAILY_TASKS=CITestTask1" dailytodo:test
+        docker run -d --name momentum -p 8080:80 -e "DAILY_TASKS=CITestTask1" momentum:test
         sleep 10
 
     - name: Test site availability
@@ -29,7 +29,7 @@ jobs:
         echo "Response Code: $HTTP_CODE"
         if [ "$HTTP_CODE" -ne 200 ]; then
           echo "Error: Site returned $HTTP_CODE"
-          docker logs dailytodo
+          docker logs momentum
           exit 1
         fi
 
