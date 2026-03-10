@@ -58,19 +58,11 @@
                 </li>
             }
         </ul>
-        <div class="progress-summary">
-            <p>Progress: @CompletedCount / @TodoItems.Count</p>
-            @if (CompletedCount == TodoItems.Count && TodoItems.Any())
-            {
-                <p class="all-completed">All tasks completed for today!</p>
-            }
-        </div>
     }
 </div>
 
 @code {
     private List<TodoItem>? TodoItems;
-    private int CompletedCount => TodoItems?.Count(item => item.IsCompleted) ?? 0;
 
     protected override void OnInitialized()
     {
