@@ -62,7 +62,7 @@ spec:
         - configMapRef:
             name: momentum-config
         volumeMounts:
-        - name: todo-data
+        - name: momentum-data
           mountPath: /app/data
         resources:
           limits:
@@ -72,29 +72,7 @@ spec:
             memory: "1Gi"
             cpu: "250m"
       volumes:
-      - name: todo-data
+      - name: momentum-data
         persistentVolumeClaim:
           claimName: momentum-pvc
 
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: momentum-ingress
-  namespace: momentum
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
-spec:
-  rules:
-  - host: momentum.home
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: momentum-service
-            port:
-              number: 80
