@@ -1,29 +1,47 @@
 html, body {
     font-family: 'Poppins', sans-serif;
     color: #4a5568;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); /* Vibrant pink gradient */
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     margin: 0;
     padding: 0;
     min-height: 100vh;
 }
 
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.centered-main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+article.content {
+    margin-top: auto;
+    margin-bottom: auto;
+    max-width: 800px;
+    width: 100%;
+    padding: 20px 1.5rem;
+}
+
+/* Make form elements layout-transparent so they don't disrupt flex/grid */
+form {
+    display: contents;
+}
+
 .momentum-container {
     background: #ffffff;
-    border-radius: 16px; /* Softer corners */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Deeper, softer shadow */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     padding: 40px;
     width: 90%;
     max-width: 700px;
     text-align: center;
-    backdrop-filter: blur(10px); /* Subtle glass effect if we had transparency, but keeping white for contrast */
-}
-
-h1 {
-    color: #2d3748;
-    margin-bottom: 30px;
-    font-weight: 600;
-    font-size: 2.5em;
-    letter-spacing: -0.5px;
 }
 
 .todo-list {
@@ -109,6 +127,7 @@ h1 {
     display: grid;
     place-content: center;
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .todo-item input[type="checkbox"]::before,
@@ -132,6 +151,18 @@ h1 {
     transform: scale(1);
 }
 
+.todo-item input[type="checkbox"] {
+    margin-right: 15px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+}
+
+.todo-item input[type="checkbox"]::before {
+    width: 12px;
+    height: 12px;
+}
+
 .subtask-item input[type="checkbox"] {
     margin-right: 12px;
     width: 20px;
@@ -142,6 +173,24 @@ h1 {
 .subtask-item input[type="checkbox"]::before {
     width: 10px;
     height: 10px;
+}
+
+.todo-item span {
+    flex-grow: 1;
+    word-break: break-word;
+    transition: color 0.2s ease;
+}
+
+.todo-item.completed {
+    background-color: #f0fff4;
+    border-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.todo-item.completed span {
+    text-decoration: line-through;
+    color: #9ae6b4;
+    opacity: 0.8;
 }
 
 .subtask-item.completed span {
@@ -156,69 +205,12 @@ h1 {
     border-color: #e2e8f0;
 }
 
-.todo-item.completed {
-    background-color: #f0fff4;
-    border-color: #c6f6d5;
-    color: #2f855a;
-}
-
-.todo-item input[type="checkbox"] {
-    margin-right: 15px;
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-}
-
-.todo-item input[type="checkbox"]::before {
-    width: 12px;
-    height: 12px;
-}
-
-
-.todo-item span {
-    flex-grow: 1;
-    word-break: break-word;
-    transition: color 0.2s ease;
-}
-
-.todo-item.completed span {
-    text-decoration: line-through;
-    color: #9ae6b4; /* Lighter green for text to recede */
-    opacity: 0.8;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .momentum-container {
         padding: 25px;
     }
 
-    h1 {
-        font-size: 2em;
-    }
-
     .todo-item {
         padding: 14px 16px;
     }
-}
-
-#blazor-error-ui {
-    background: #fff;
-    bottom: 0;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    display: none;
-    left: 0;
-    padding: 1rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    text-align: center;
-    border-top: 4px solid #e53e3e;
-}
-
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
 }

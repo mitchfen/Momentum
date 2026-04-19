@@ -1,0 +1,33 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momentum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+</head>
+<body>
+<div class="page">
+    <main class="centered-main-content">
+        <article class="content">
+            <div class="momentum-container">
+                {{if not .}}
+                    <p>No daily tasks configured.</p>
+                {{else}}
+                    <ul class="todo-list">
+                        {{range .}}
+                            {{template "todo-item" .}}
+                        {{end}}
+                    </ul>
+                {{end}}
+            </div>
+        </article>
+    </main>
+</div>
+</body>
+</html>
+{{end}}
