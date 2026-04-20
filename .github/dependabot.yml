@@ -7,10 +7,10 @@ updates:
     assignees:
       - "mitchfen"
 
-  - package-ecosystem: "nuget"
-    directory: "/"
+  - package-ecosystem: "gomod"
+    directory: "/src"
     schedule:
-      interval: 'weekly'
+      interval: "weekly"
     assignees:
       - "mitchfen"
 

@@ -9,27 +9,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
+  go:
+    name: Go build and vet
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-    - name: Build Docker image
-      run: docker build -t momentum:test .
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: src/go.mod
 
-    - name: Run container
-      run: |
-        docker run -d --name momentum -p 8080:80 -e "DAILY_TASKS=CITestTask1" momentum:test
-        sleep 10
+      - name: Build
+        run: go build ./...
+        working-directory: src
 
-    - name: Test site availability
-      run: |
-        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
-        echo "Response Code: $HTTP_CODE"
-        if [ "$HTTP_CODE" -ne 200 ]; then
-          echo "Error: Site returned $HTTP_CODE"
-          docker logs momentum
-          exit 1
-        fi
+      - name: Vet
+        run: go vet ./...
+        working-directory: src
+
+  build-and-test:
+    name: Docker smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t momentum:test .
+
+      - name: Run container
+        run: |
+          docker run -d --name momentum -p 8080:80 -e "DAILY_TASKS=CITestTask1" momentum:test
+          sleep 5
+
+      - name: Test site availability
+        run: |
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
+          echo "Response Code: $HTTP_CODE"
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "Error: Site returned $HTTP_CODE"
+            docker logs momentum
+            exit 1
+          fi
 

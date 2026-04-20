@@ -1,27 +1,21 @@
 # Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+FROM golang:1.24-alpine AS build
 WORKDIR /source
 
-# Copy csproj and restore dependencies
-COPY src/*.csproj src/
-RUN dotnet restore src/Momentum.csproj
+COPY src/go.mod ./
+RUN go mod download
 
-# Copy remaining source code and publish
-COPY . .
-WORKDIR /source/src
-RUN dotnet publish Momentum.csproj -c Release -o /app/publish
+COPY src/ .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /app/momentum .
 
 # Runtime Stage
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
+FROM scratch
 WORKDIR /app
 
-# Copy published output from build stage
-COPY --from=build /app/publish .
+COPY --from=build /app/momentum .
 
-# The app expects port 80
 EXPOSE 80
-ENV ASPNETCORE_URLS=http://+:80
 
-ENTRYPOINT ["dotnet", "Momentum.dll"]
+ENTRYPOINT ["./momentum"]
 
 LABEL org.opencontainers.image.description="Momentum - a daily habit stacking, task tracking application"

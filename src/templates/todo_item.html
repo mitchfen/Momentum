@@ -1,0 +1,39 @@
+{{define "todo-item"}}
+<li class="todo-item{{if .IsCompleted}} completed{{end}}">
+    {{if eq (len .SubTasks) 1}}
+        {{with index .SubTasks 0}}
+        <form hx-post="/toggle" hx-target="closest li.todo-item" hx-swap="outerHTML" hx-trigger="change">
+            <input type="hidden" name="taskText" value="{{$.Text}}">
+            <input type="hidden" name="subTaskText" value="{{.Text}}">
+            <div class="task-row">
+                <input type="checkbox" name="completed" value="true"{{if .IsCompleted}} checked{{end}}>
+                <span>{{.Text}}</span>
+            </div>
+        </form>
+        {{end}}
+    {{else}}
+        <div class="habit-stack">
+            {{if $.DisplayTitle}}
+            <div class="stack-header">
+                <span class="stack-title">{{$.DisplayTitle}}</span>
+                <span class="stack-progress">({{$.CompletedCount}}/{{len $.SubTasks}})</span>
+            </div>
+            {{else}}
+            <div class="stack-progress-corner">{{$.CompletedCount}}/{{len $.SubTasks}}</div>
+            {{end}}
+            <ul class="subtask-list{{if not $.DisplayTitle}} no-header{{end}}">
+                {{range $.SubTasks}}
+                <li class="subtask-item{{if .IsCompleted}} completed{{end}}">
+                    <form hx-post="/toggle" hx-target="closest li.todo-item" hx-swap="outerHTML" hx-trigger="change">
+                        <input type="hidden" name="taskText" value="{{$.Text}}">
+                        <input type="hidden" name="subTaskText" value="{{.Text}}">
+                        <input type="checkbox" name="completed" value="true"{{if .IsCompleted}} checked{{end}}>
+                        <span>{{.Text}}</span>
+                    </form>
+                </li>
+                {{end}}
+            </ul>
+        </div>
+    {{end}}
+</li>
+{{end}}
