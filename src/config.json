@@ -1,11 +1,11 @@
 {
   "DailyTasks": [
-    "Habitstack task 1 + habitstack task 2 + habitstack task 3",
-    "Habitstack task 4 + habitstack task 5 + habitstack task 6",
-    "Task 7",
-    "Task 8",
-    "Task 9",
-    "Task 10"
+    "Early Morning: Feed the cat + Weigh yourself + Meditate",
+    "Mid morning: Coffee + Medication + Creatine",
+    "Body: Brush teeth + Shower + Shave",
+		"Work out",
+    "Drink protein",
+    "Vacuum"
   ],
   "TimeZone": "America/Detroit"
 }

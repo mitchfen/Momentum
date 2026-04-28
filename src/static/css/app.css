@@ -1,7 +1,11 @@
-html, body {
+html {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    min-height: 100%;
+}
+
+body {
     font-family: 'Poppins', sans-serif;
     color: #4a5568;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -35,13 +39,11 @@ form {
 }
 
 .momentum-container {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 40px;
+    padding: 40px 0;
     width: 90%;
     max-width: 700px;
     text-align: center;
+    margin: 0 auto;
 }
 
 .todo-list {
@@ -206,10 +208,6 @@ form {
 }
 
 @media (max-width: 768px) {
-    .momentum-container {
-        padding: 25px;
-    }
-
     .todo-item {
         padding: 14px 16px;
     }
