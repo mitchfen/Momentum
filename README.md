@@ -23,9 +23,9 @@ Tasks can be configured in two ways:
 ```json
 {
   "DailyTasks": [
-    "Habitstack task 1 + habitstack task 2 + habitstack task 3",
+    "Morning: Make bed + Brush teeth + Cold shower",
     "Single task",
-    "Named Stack: Step 1 + Step 2"
+    "Mind: Meditate + Journal + Read"
   ],
   "TimeZone": "America/New_York"
 }
